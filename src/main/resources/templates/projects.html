@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <title>Mini JIRA</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link href="../static/bootstrap.min.css" rel="stylesheet" th:href="@{/bootstrap.min.css}"/>
+    <link href="../static/styles.css" rel="stylesheet" th:href="@{/styles.css}" />
+    <script src="../static/js/main.js" th:src="@{/js/main.js}"></script>
+    <script src="../static/bootstrap.bundle.min.js" th:src="@{/bootstrap.bundle.min.js}"></script>
+</head>
+<body>
+<div th:replace="fragments/header :: header">&nbsp;</div>
+<div class="container">
+    <!-- /* Handle the flash message */-->
+    <th:block th:if="${message != null}">
+        <!-- /* The message code is returned from the @Controller */ -->
+        <div th:replace="fragments/alert :: alert (type=${#strings.toLowerCase(message.type)}, message=#{${message.message}(${#authentication.name})})">&nbsp;</div>
+    </th:block>
+    <p>
+        Welcome to the Spring MVC Quickstart application!
+    </p>
+</div>
+<div th:replace="fragments/footer :: footer">&nbsp;</div>
+</body>
+</html>

@@ -1,0 +1,31 @@
+@startuml Classes
+
+title Mini JIRA - ER diagram
+
+class "ProjectEntity" as p {
+    title: String
+    description: String
+    isClosed: boolean
+}
+class "TaskEntity" as t {
+    title: String
+    description: String
+    hoursNeeded: float
+    status: StatusEnum
+}
+class "CommentEntity" as c {
+    body: String
+}
+class "UserEntity" as u {
+    username: String
+    password: String
+    roles: String[]
+}
+
+p "1" -left- "0..*" t
+t "1" -down- "0..*" c
+u "1" - "0..*" c
+u "1" -up- "0..*" p : management
+u "0..*" - "0..*" t : assignment
+
+@enduml

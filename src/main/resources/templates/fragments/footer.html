@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="../../static/bootstrap.min.css" rel="stylesheet" media="screen"
+          th:href="@{/bootstrap.min.css}"/>
+<body>
+<div th:fragment="footer" th:align="center">
+    &copy; <span th:text="${#temporals.format(#temporals.createNow(), 'yyyy')}">2022</span>
+    <span>Mini JIRA</span>
+</div>
+</body>
+</html>
