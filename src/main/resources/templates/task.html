@@ -6,6 +6,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <link href="../static/css/bootstrap.min.css" th:href="@{/css/bootstrap.min.css}" rel="stylesheet"/>
     <script src="../static/js/bootstrap.bundle.min.js" th:src="@{/js/bootstrap.bundle.min.js}"></script>
+    <script src="../static/js/task.js" th:src="@{/js/task.js}"></script>
     <script src="https://kit.fontawesome.com/735dba9ed7.js" crossorigin="anonymous"></script>
     <link href="../static/img/favicon.png" rel="icon" type="image/png" th:href="@{/img/favicon.png}"/>
 </head>
@@ -16,30 +17,56 @@
         <div th:replace="fragments/alert :: alert (type=${#strings.toLowerCase(message.type)}, message=${message.message})"></div>
     </div>
     <div class="d-flex justify-content-end my-4" sec:authorize="hasRole('ROLE_MANAGER')">
-        <a class="btn btn-primary" th:href="@{/tasks/{id}/edit(id=${task.getId()})}">Edit Task</a>
+        <a class="btn btn-primary me-1" th:href="@{/tasks/{id}/edit(id=${task.getId()})}">Edit</a>
+        <button class="btn btn-outline-primary me-1" type="button" data-bs-toggle="modal"
+                data-bs-target="#assigneeModal">
+            Add assignee
+        </button>
+        <button class="btn btn-danger" th:onclick="'deleteTask(' + ${task.getId()} + ')'">Delete</button>
     </div>
     <div class="row mb-4">
-        <div class="col-12">
-            <h2 th:text="${task.getTitle()}"></h2>
+        <div class="col">
+            <h2>
+                <i class="fa-solid fa-list-check"></i>
+                <span th:text="${task.getTitle()}"></span>
+            </h2>
             <p th:text="${task.getDescription()}"></p>
-            <h4>hours needed: <span th:text="${task.getHoursNeeded()}"></span></h4>
-            <h4>status: <span th:text="${task.getStatus().getName()}"></span></h4>
+            <h4>
+                <i class="fa-solid fa-clock"></i>
+                <span th:text="${task.getHoursNeeded()}"></span>h
+            </h4>
+            <h4>
+                <i class="fa-solid fa-bars-progress"></i>
+                <span th:text="${task.getStatus().getName()}"></span>
+            </h4>
             <h4 class="text-end">under project <a th:text="${task.getProject().getTitle()}"
-                                                  th:href="@{/users/{id}(id=${task.getProject().getId()})}"></a>
+                                                  th:href="@{/projects/{id}(id=${task.getProject().getId()})}"></a>
             </h4>
             <h4 class="text-end">project managed by <a th:text="${task.getProject().getManager().getUsername()}"
                                                        th:href="@{/users/{id}(id=${task.getProject().getManager().getId()})}"></a>
             </h4>
         </div>
-    </div>
-    <div class="row">
-        <div class="col-12 mb-2">
-            <div class="position-relative px-2 py-1 text-white bg-info bg-opacity-10 border border-info border-opacity-10 rounded-2">
-                Assigned users
+        <div class="col">
+            <div class="row">
+                <div class="col-12 mb-2">
+                    <div class="position-relative px-2 py-1 text-white bg-info bg-opacity-10 border border-info border-opacity-10 rounded-2">
+                        Assigned users
+                    </div>
+                </div>
+                <div class="col-12 my-1" th:each="user: ${task.getAssignedUsers()}">
+                    <div class="d-flex">
+                        <div><i class="fa-solid fa-circle-user"></i></div>
+                        <div class="h5 flex-grow-1 ms-2">
+                            <a th:text="${user.getUsername()}" th:href="@{/users/{id}/(id=${user.getId()})}"></a>
+                            <span th:text="${user.getRole().getRole() == 'ROLE_MANAGER' ? '(manager)' : ''}"></span>
+                        </div>
+                        <button type="button" class="btn btn-outline-danger btn-sm" sec:authorize="hasRole('ROLE_MANAGER')"
+                                th:onclick="'unassign(' + ${task.getId()} + ', ' + ${user.getId()} + ')'">
+                            <i class="fa-solid fa-trash"></i>
+                        </button>
+                    </div>
+                </div>
             </div>
-        </div>
-        <div class="col-12 my-1" th:each="user: ${task.getAssignedUsers()}">
-            TODO: show user details
         </div>
     </div>
     <div class="row">
@@ -50,6 +77,33 @@
         </div>
         <div class="col-12 my-1" th:each="comment: ${comments}">
             TODO: show comment details
+        </div>
+    </div>
+    <!-- Modal -->
+    <div class="modal fade" id="assigneeModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Add assignee</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form method="post" th:action="@{/tasks/{id}/assign(id=${task.getId()})}"
+                      th:unless="${users.isEmpty()}">
+                    <div class="modal-body">
+                        <h5 th:if="${users.isEmpty()}">Cannot assign, no more assignable user!</h5>
+                        <div class="mb-3">
+                            <select class="form-select" aria-label="Default select example" required name="assigneeId">
+                                <option th:each="user : ${users}" th:value="${user.getId()}"
+                                        th:text="${user.getUsername()}"></option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Assign</button>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
 </main>

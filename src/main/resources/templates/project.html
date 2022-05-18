@@ -17,7 +17,8 @@
     </div>
     <div class="d-flex justify-content-end my-4" sec:authorize="hasRole('ROLE_MANAGER')">
         <a class="btn btn-primary" th:href="@{/projects/{id}/edit(id=${project.getId()})}">Edit Project</a>
-        <a class="btn btn-outline-primary ms-1" th:href="@{/tasks/new/{id}/(id=${project.getId()})}">Add Task</a>
+        <a th:unless="${project.isClosed()}" class="btn btn-outline-primary ms-1"
+           th:href="@{/tasks/new/{id}/(id=${project.getId()})}">Add Task</a>
     </div>
     <div class="row mb-4">
         <div class="col-12">
@@ -40,13 +41,17 @@
                 <div class="col-12">
                     <div class="card w-100">
                         <div class="card-body d-flex flex-column">
-                            <h5 class="card-title" th:text="${task.getTitle()}">title</h5>
+                            <a class="h5 card-title" th:text="${task.getTitle()}"
+                               th:href="@{/tasks/{id}/(id=${task.getId()})}">
+                                title
+                            </a>
                             <h6 class="card-subtitle mb-1 text-muted">
-                                Hours needed: <span th:text="${task.getHoursNeeded()}"></span>
+                                needs <span th:text="${task.getHoursNeeded()}"></span> hours
                             </h6>
                             <p class="card-text" th:text="${project.getDescription()}">desc</p>
-                            <a sec:authorize="hasRole('ROLE_MANAGER')" type="button" th:href="@{/tasks/{id}/edit(id=${task.getId()})}"
-                                    class="card-link btn btn-sm btn-link align-self-end">
+                            <a th:unless="${project.isClosed()}" sec:authorize="hasRole('ROLE_MANAGER')" type="button"
+                               th:href="@{/tasks/{id}/edit(id=${task.getId()})}"
+                               class="card-link btn btn-sm btn-link align-self-end">
                                 Edit
                             </a>
                             <button type="button" class="card-link btn btn-sm btn-primary align-self-end mt-1">

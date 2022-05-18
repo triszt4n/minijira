@@ -44,7 +44,7 @@ public class ProjectService {
 
         projectEntity.setDescription(updateProjectInput.getDescription());
         projectEntity.setTitle(updateProjectInput.getTitle());
-        projectEntity.setClosed(updateProjectInput.isClosed());
+        projectEntity.setClosed(updateProjectInput.getIsClosed().equals("true"));
 
         this.projectRepository.save(projectEntity);
     }

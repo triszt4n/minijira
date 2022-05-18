@@ -7,6 +7,7 @@ import hu.triszt4n.minijira.input.CreateTaskInput;
 import hu.triszt4n.minijira.input.UpdateTaskInput;
 import hu.triszt4n.minijira.repository.ProjectRepository;
 import hu.triszt4n.minijira.repository.TaskRepository;
+import hu.triszt4n.minijira.repository.UserRepository;
 import hu.triszt4n.minijira.util.StatusEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,10 +18,12 @@ import java.util.List;
 public class TaskService {
     private final TaskRepository taskRepository;
     private final ProjectRepository projectRepository;
+    private final UserRepository userRepository;
 
-    public TaskService(TaskRepository taskRepository, ProjectRepository projectRepository) {
+    public TaskService(TaskRepository taskRepository, ProjectRepository projectRepository, UserRepository userRepository) {
         this.taskRepository = taskRepository;
         this.projectRepository = projectRepository;
+        this.userRepository = userRepository;
     }
 
     public List<TaskEntity> getAllByProject(ProjectEntity projectEntity) {
@@ -54,6 +57,28 @@ public class TaskService {
         taskEntity.setStatus(StatusEnum.valueOf(updateTaskInput.getStatusValue()));
         taskEntity.setHoursNeeded(updateTaskInput.getHoursNeeded());
 
+        this.taskRepository.save(taskEntity);
+    }
+
+    public void addAssignee(Long id, Long assigneeId) {
+        final var taskEntity = taskRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Task does not exist"));
+
+        final var userEntity = userRepository.findById(assigneeId)
+                .orElseThrow(() -> new IllegalArgumentException("User to assign does not exist"));
+
+        taskEntity.getAssignedUsers().add(userEntity);
+        this.taskRepository.save(taskEntity);
+    }
+
+    public void removeAssignee(Long id, Long assigneeId) {
+        final var taskEntity = taskRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Task does not exist"));
+
+        final var userEntity = userRepository.findById(assigneeId)
+                .orElseThrow(() -> new IllegalArgumentException("User to unassign does not exist"));
+
+        taskEntity.getAssignedUsers().remove(userEntity);
         this.taskRepository.save(taskEntity);
     }
 }

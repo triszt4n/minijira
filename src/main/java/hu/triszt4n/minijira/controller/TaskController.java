@@ -5,8 +5,10 @@ import hu.triszt4n.minijira.input.CreateTaskInput;
 import hu.triszt4n.minijira.input.UpdateTaskInput;
 import hu.triszt4n.minijira.service.CommentService;
 import hu.triszt4n.minijira.service.TaskService;
+import hu.triszt4n.minijira.service.UserService;
 import hu.triszt4n.minijira.util.MyUserPrincipal;
 import hu.triszt4n.minijira.util.StatusEnum;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -14,16 +16,19 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/tasks")
 public class TaskController {
     private final TaskService taskService;
     private final CommentService commentService;
+    private final UserService userService;
 
-    public TaskController(TaskService taskService, CommentService commentService) {
+    public TaskController(TaskService taskService, CommentService commentService, UserService userService) {
         this.taskService = taskService;
         this.commentService = commentService;
+        this.userService = userService;
     }
 
     @GetMapping("/{id}")
@@ -37,9 +42,12 @@ public class TaskController {
         }
 
         final var comments = commentService.getAllByTask(task);
+        var assignableUsers = userService.getAll();
+        assignableUsers.removeAll(task.getAssignedUsers());
 
         model.addAttribute("task", task);
         model.addAttribute("comments", comments);
+        model.addAttribute("users", assignableUsers);
         return "task";
     }
 
@@ -52,9 +60,9 @@ public class TaskController {
 
     @PostMapping("/new/{projectId}")
     public String createTask(@Valid @ModelAttribute("createTaskInput") CreateTaskInput createTaskInput,
-                                BindingResult bindingResult,
-                                Authentication authentication,
-                                @PathVariable Long projectId) {
+                             BindingResult bindingResult,
+                             Authentication authentication,
+                             @PathVariable Long projectId) {
         if (bindingResult.hasErrors()) {
             return "formPages/newTask";
         }
@@ -83,6 +91,20 @@ public class TaskController {
         }
 
         taskService.update(id, updateTaskInput);
+        return "redirect:/tasks/".concat(String.valueOf(id));
+    }
+
+    @PostMapping("/{id}/assign")
+    public String addAssignee(@RequestParam Map<String, String> requestParam,
+                              @PathVariable Long id) {
+        taskService.addAssignee(id, Long.parseLong(requestParam.get("assigneeId")));
+        return "redirect:/tasks/".concat(String.valueOf(id));
+    }
+
+    @PostMapping("/{id}/unassign/{assigneeId}")
+    public String removeAssignee(@PathVariable Long id,
+                                 @PathVariable Long assigneeId) {
+        taskService.removeAssignee(id, assigneeId);
         return "redirect:/tasks/".concat(String.valueOf(id));
     }
 }

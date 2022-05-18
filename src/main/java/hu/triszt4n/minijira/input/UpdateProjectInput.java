@@ -14,11 +14,8 @@ public class UpdateProjectInput {
     @NotBlank
     @Size(min = 3, max = 64)
     private String title;
-
     private String description;
-
-    @NotNull
-    private boolean isClosed;
+    private String isClosed = "false";
 
     public UpdateProjectInput() {
     }
@@ -26,6 +23,6 @@ public class UpdateProjectInput {
     public UpdateProjectInput(ProjectEntity projectEntity) {
         this.title = projectEntity.getTitle();
         this.description = projectEntity.getDescription();
-        this.isClosed = projectEntity.isClosed();
+        this.isClosed = projectEntity.isClosed() ? "true" : "false";
     }
 }

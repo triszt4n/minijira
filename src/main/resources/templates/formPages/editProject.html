@@ -29,7 +29,8 @@
         </div>
         <div class="mb-3">
             <div class="form-check">
-                <input class="form-check-input" type="checkbox" name="isClosed" th:checked="${updateProjectInput.isClosed}" id="closed">
+                <input class="form-check-input" type="checkbox" name="isClosed" value="true"
+                       th:checked="${updateProjectInput.isClosed == 'true'}" id="closed">
                 <label class="form-check-label" for="closed">Project is closed down</label>
             </div>
         </div>
