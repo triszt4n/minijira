@@ -4,31 +4,27 @@
     <title>Mini JIRA | Login</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-    <link th:href="@{/bootstrap.min.css}" rel="stylesheet"/>
-    <link th:href="@{/css/login.css}" rel="stylesheet"/>
-    <script th:src="@{/bootstrap.bundle.min.js}"></script>
+    <link href="../static/css/bootstrap.min.css" th:href="@{/css/bootstrap.min.css}" rel="stylesheet"/>
+    <link href="../static/css/login.css" th:href="@{/css/login.css}" rel="stylesheet"/>
+    <script src="../static/js/bootstrap.bundle.min.js" th:src="@{/js/bootstrap.bundle.min.js}"></script>
     <script src="https://kit.fontawesome.com/735dba9ed7.js" crossorigin="anonymous"></script>
-    <link rel="icon" type="image/png" th:href="@{/img/favicon.png}"/>
+    <link href="../static/img/favicon.png" rel="icon" type="image/png" th:href="@{/img/favicon.png}"/>
 </head>
 <body>
 <main class="form-signin w-100 m-auto">
     <th:block th:if="${message != null}">
         <div th:replace="fragments/alert :: alert (type=${#strings.toLowerCase(message.type)}, message=${message.message})"></div>
     </th:block>
-    <form class="text-center" th:action="@{/auth/login}" th:object="${loginUserInput}" method="post">
-        <img class="mb-4" th:src="@{/img/minijira.svg}" alt="" width="128">
+    <form class="text-center" method="post">
+        <img class="mb-4" src="../static/img/minijira.svg" th:src="@{/img/minijira.svg}" alt="" width="128">
         <h1 class="h3 mb-3 fw-normal">Sign in to Mini JIRA</h1>
         <div class="form-floating my-1">
-            <input type="text" class="form-control" th:classappend="${#fields.hasErrors('username') ? 'is-invalid' : ''}"
-                   id="floatingInput" min="1" max="32" th:field="*{username}">
+            <input type="text" class="form-control" id="floatingInput" min="1" max="32" required name="username">
             <label for="floatingInput">Username</label>
-            <div class="invalid-feedback" th:if="${#fields.hasErrors('username')}" th:errors="*{username}"></div>
         </div>
         <div class="form-floating my-1">
-            <input type="password" class="form-control" th:classappend="${#fields.hasErrors('passwordRaw') ? 'is-invalid' : ''}"
-                   id="floatingPassword" min="1" max="64" th:field="*{passwordRaw}">
+            <input type="password" class="form-control" id="floatingPassword" min="1" max="64" required name="password">
             <label for="floatingPassword">Password</label>
-            <div class="invalid-feedback" th:if="${#fields.hasErrors('passwordRaw')}" th:errors="*{passwordRaw}"></div>
         </div>
         <button class="w-100 btn btn-lg btn-primary" type="submit">Sign in</button>
     </form>

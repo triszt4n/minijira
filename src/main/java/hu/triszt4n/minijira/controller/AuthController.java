@@ -24,18 +24,6 @@ public class AuthController {
         return "redirect:/";
     }
 
-    @PostMapping("/login")
-    public String login(@Valid @ModelAttribute("loginUserInput") LoginUserInput loginUserInput,
-                        BindingResult bindingResult) {
-        final var user = userService.getUser(loginUserInput);
-        if (user == null) {
-            bindingResult.rejectValue("username", "error.loginCredentials", "Invalid credentials");
-            return "index";
-        }
-
-        return "redirect:/projects";
-    }
-
     @GetMapping("/register")
     public String registerPage(Model model) {
         model.addAttribute("createUserInput", new CreateUserInput());

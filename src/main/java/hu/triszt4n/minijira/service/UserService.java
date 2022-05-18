@@ -5,31 +5,35 @@ import hu.triszt4n.minijira.entity.UserEntity;
 import hu.triszt4n.minijira.input.LoginUserInput;
 import hu.triszt4n.minijira.repository.UserRepository;
 import hu.triszt4n.minijira.util.RoleEnum;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
 public class UserService {
     private final UserRepository userRepository;
+    private final BCryptPasswordEncoder passwordEncoder;
 
-    public UserService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository, BCryptPasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
-    public UserEntity createUser(CreateUserInput createUserInput) throws IllegalArgumentException {
+    public void createUser(CreateUserInput createUserInput) throws IllegalArgumentException {
         if (userRepository.existsByUsernameIgnoreCase(createUserInput.getUsername())) {
             throw new IllegalArgumentException("Username already in use");
         }
 
-        return userRepository.save(new UserEntity()
-                .setUsername(createUserInput.getUsername())
-                .setPassword(createUserInput.getPasswordRaw())
-                .setRole(RoleEnum.DEVELOPER));
-    }
+        passwordEncoder.matches(this.passwordEncoder
+                .encode(createUserInput.getPasswordRaw()), this.passwordEncoder
+                .encode(createUserInput.getPasswordRaw()));
 
-    public UserEntity getUser(LoginUserInput loginUserInput) {
-        return userRepository.findByUsernameIgnoreCaseAndPassword(
-                loginUserInput.getUsername(),
-                loginUserInput.getPasswordRaw()
-                ).orElse(null);
+        userRepository.save(new UserEntity()
+                .setUsername(createUserInput.getUsername())
+                .setPassword(this.passwordEncoder
+                        .encode(createUserInput.getPasswordRaw()))
+                .setRole(RoleEnum.DEVELOPER));
     }
 }
