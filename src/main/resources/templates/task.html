@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org" lang="en">
+<head>
+    <title>Mini JIRA | Login</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link href="../static/css/bootstrap.min.css" th:href="@{/css/bootstrap.min.css}" rel="stylesheet"/>
+    <script src="../static/js/bootstrap.bundle.min.js" th:src="@{/js/bootstrap.bundle.min.js}"></script>
+    <script src="https://kit.fontawesome.com/735dba9ed7.js" crossorigin="anonymous"></script>
+    <link href="../static/img/favicon.png" rel="icon" type="image/png" th:href="@{/img/favicon.png}"/>
+</head>
+<body>
+<div th:replace="fragments/navbar :: navbar"></div>
+<main class="container">
+    <div class="my-2" th:if="${message != null}">
+        <div th:replace="fragments/alert :: alert (type=${#strings.toLowerCase(message.type)}, message=${message.message})"></div>
+    </div>
+    <div class="d-flex justify-content-end my-4" sec:authorize="hasRole('ROLE_MANAGER')">
+        <a class="btn btn-primary" th:href="@{/tasks/{id}/edit(id=${task.getId()})}">Edit Task</a>
+    </div>
+    <div class="row mb-4">
+        <div class="col-12">
+            <h2 th:text="${task.getTitle()}"></h2>
+            <p th:text="${task.getDescription()}"></p>
+            <h4>hours needed: <span th:text="${task.getHoursNeeded()}"></span></h4>
+            <h4>status: <span th:text="${task.getStatus().getName()}"></span></h4>
+            <h4 class="text-end">under project <a th:text="${task.getProject().getTitle()}"
+                                                  th:href="@{/users/{id}(id=${task.getProject().getId()})}"></a>
+            </h4>
+            <h4 class="text-end">project managed by <a th:text="${task.getProject().getManager().getUsername()}"
+                                                       th:href="@{/users/{id}(id=${task.getProject().getManager().getId()})}"></a>
+            </h4>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12 mb-2">
+            <div class="position-relative px-2 py-1 text-white bg-info bg-opacity-10 border border-info border-opacity-10 rounded-2">
+                Assigned users
+            </div>
+        </div>
+        <div class="col-12 my-1" th:each="user: ${task.getAssignedUsers()}">
+            TODO: show user details
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12 mt-4 mb-2">
+            <div class="position-relative px-2 py-1 text-white bg-info bg-opacity-10 border border-info border-opacity-10 rounded-2">
+                Comments
+            </div>
+        </div>
+        <div class="col-12 my-1" th:each="comment: ${comments}">
+            TODO: show comment details
+        </div>
+    </div>
+</main>
+<div th:replace="fragments/footer :: footer"></div>
+</body>
+</html>

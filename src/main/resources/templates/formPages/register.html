@@ -12,7 +12,7 @@
 </head>
 <body>
 <main class="form-signin w-100 m-auto">
-    <form th:action="@{/auth/register}" th:object="${createUserInput}" method="post">
+    <form th:object="${createUserInput}" method="post">
         <h1 class="h3 mb-3 fw-normal text-center">Registration form</h1>
         <div class="form-floating my-1">
             <input type="text" class="form-control" th:classappend="${#fields.hasErrors('username') ? 'is-invalid' : ''}"

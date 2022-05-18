@@ -12,8 +12,8 @@
 <body>
 <div th:replace="fragments/navbar :: navbar"></div>
 <main class="container">
-    <form th:action="@{/projects}" th:object="${createProjectInput}" method="post">
-        <h1 class="h3 my-3 fw-normal text-center">New Project</h1>
+    <form th:object="${createTaskInput}" method="post">
+        <h1 class="h3 my-3 fw-normal text-center">New Task</h1>
         <div class="mb-3">
             <label for="title" class="form-label">Title</label>
             <input type="text" class="form-control" id="title" min="3" max="32" required
@@ -23,12 +23,25 @@
         <div class="mb-3">
             <label for="desc" class="form-label">Description</label>
             <textarea class="form-control" id="desc" rows="3"
-                      th:classappend="${#fields.hasErrors('title') ? 'is-invalid' : ''}"
+                      th:classappend="${#fields.hasErrors('description') ? 'is-invalid' : ''}"
                       th:field="*{description}"></textarea>
             <div class="invalid-feedback" th:if="${#fields.hasErrors('description')}" th:errors="*{description}"></div>
         </div>
+        <div class="mb-3">
+            <label for="hoursNeeded" class="form-label">Hours needed</label>
+            <input class="form-control" id="hoursNeeded" type="number" step="0.5" required
+                   th:classappend="${#fields.hasErrors('hoursNeeded') ? 'is-invalid' : ''}" th:field="*{hoursNeeded}">
+            <div class="invalid-feedback" th:if="${#fields.hasErrors('hoursNeeded')}" th:errors="*{hoursNeeded}"></div>
+        </div>
+        <div class="mb-3">
+            <label for="status" class="form-label">Status</label>
+            <select id="status" class="form-select" th:field="*{statusValue}">
+                <option th:each="status : ${statuses}" th:value="${status.toString()}" th:text="${status.getName()}"
+                        th:selected="${status.getName() == 'Todo'}"></option>
+            </select>
+        </div>
         <div class="d-flex justify-content-between">
-            <a class="btn btn-secondary" th:href="@{/projects}">Back</a>
+            <a class="btn btn-secondary" href="javascript:history.back()">Back</a>
             <button class="btn btn-primary" type="submit">Save</button>
         </div>
     </form>

@@ -4,6 +4,7 @@ import hu.triszt4n.minijira.dto.MessageDto;
 import hu.triszt4n.minijira.entity.ProjectEntity;
 import hu.triszt4n.minijira.entity.TaskEntity;
 import hu.triszt4n.minijira.input.CreateProjectInput;
+import hu.triszt4n.minijira.input.UpdateProjectInput;
 import hu.triszt4n.minijira.service.ProjectService;
 import hu.triszt4n.minijira.service.TaskService;
 import hu.triszt4n.minijira.util.MyUserPrincipal;
@@ -23,9 +24,8 @@ import java.util.stream.Collectors;
 @Controller
 @RequestMapping("/projects")
 public class ProjectController {
-    private final ProjectService projectService;
 
-    @Autowired
+    private final ProjectService projectService;
     private final TaskService taskService;
 
     public ProjectController(ProjectService projectService, TaskService taskService) {
@@ -48,21 +48,41 @@ public class ProjectController {
     @GetMapping("/new")
     public String newProjectPage(Model model) {
         model.addAttribute("createProjectInput", new CreateProjectInput());
-        return "newProject";
+        return "formPages/newProject";
     }
 
-    @PostMapping("")
+    @PostMapping("/new")
     public String createProject(@Valid @ModelAttribute("createProjectInput") CreateProjectInput createProjectInput,
                                 BindingResult bindingResult,
                                 Authentication authentication) {
         if (bindingResult.hasErrors()) {
-            return "newProject";
+            return "formPages/newProject";
         }
 
         final var currentUser = (MyUserPrincipal) authentication.getPrincipal();
         projectService.create(createProjectInput, currentUser.getUserEntity());
 
         return "redirect:/";
+    }
+
+    @GetMapping("/{id}/edit")
+    public String editProjectPage(Model model, @PathVariable Long id) {
+        final var project = projectService.getById(id);
+
+        model.addAttribute("updateProjectInput", new UpdateProjectInput(project));
+        return "formPages/editProject";
+    }
+
+    @PostMapping("/{id}/edit")
+    public String updateProject(@Valid @ModelAttribute("updateProjectInput") UpdateProjectInput updateProjectInput,
+                                BindingResult bindingResult,
+                                @PathVariable Long id) {
+        if (bindingResult.hasErrors()) {
+            return "formPages/editProject";
+        }
+
+        projectService.update(id, updateProjectInput);
+        return "redirect:/projects/".concat(String.valueOf(id));
     }
 
     @GetMapping("/{id}")

@@ -27,21 +27,21 @@ public class AuthController {
     @GetMapping("/register")
     public String registerPage(Model model) {
         model.addAttribute("createUserInput", new CreateUserInput());
-        return "register";
+        return "formPages/register";
     }
 
     @PostMapping("/register")
     public String register(@Valid @ModelAttribute("createUserInput") CreateUserInput createUserInput,
                            BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
-            return "register";
+            return "formPages/register";
         }
 
         try {
             userService.createUser(createUserInput);
         } catch (IllegalArgumentException e) {
             bindingResult.rejectValue("username", "error.createUserInput", e.getMessage());
-            return "register";
+            return "formPages/register";
         }
 
         return "redirect:/?success";
