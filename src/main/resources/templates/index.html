@@ -4,16 +4,36 @@
     <title>Mini JIRA</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-    <link href="../static/bootstrap.min.css" rel="stylesheet" th:href="@{/bootstrap.min.css}"/>
-    <link href="../static/styles.css" rel="stylesheet" th:href="@{/styles.css}" />
-    <script src="../static/js/main.js" th:src="@{/js/main.js}"></script>
-    <script src="../static/bootstrap.bundle.min.js" th:src="@{/bootstrap.bundle.min.js}"></script>
+    <link th:href="@{/bootstrap.min.css}" rel="stylesheet"/>
+    <link th:href="@{/css/login.css}" rel="stylesheet"/>
+    <script th:src="@{/bootstrap.bundle.min.js}"></script>
+    <script src="https://kit.fontawesome.com/735dba9ed7.js" crossorigin="anonymous"></script>
 </head>
-<body>
-<div class="container">
-    <p>
-        This is the login page.
+<body class="text-center">
+<main class="form-signin w-100 m-auto">
+    <form>
+        <img class="mb-4" th:src="@{/img/minijira.svg}" alt="" width="128">
+        <h1 class="h3 mb-3 fw-normal">Sign in to Mini JIRA</h1>
+
+        <div class="form-floating">
+            <input type="text" class="form-control" id="floatingInput" placeholder="dev-username" min="1" max="32">
+            <label for="floatingInput">Username</label>
+        </div>
+        <div class="form-floating">
+            <input type="password" class="form-control" id="floatingPassword" placeholder="Password" min="1" max="64">
+            <label for="floatingPassword">Password</label>
+        </div>
+        <button class="w-100 btn btn-lg btn-primary" type="submit">Sign in</button>
+    </form>
+    <div class="mt-3 mb-3 d-flex justify-content-between align-items-center">
+        <div>
+            Not a member yet?
+        </div>
+        <a class="btn btn-secondary" href="/auth/register">Sign up</a>
+    </div>
+    <p class="mt-5 mb-3 text-muted">
+        &copy; Trisztán Piller | Mini JIRA <span th:text="${#temporals.format(#temporals.createNow(), 'yyyy')}">2077</span>
     </p>
-</div>
+</main>
 </body>
 </html>

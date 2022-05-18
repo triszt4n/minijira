@@ -14,12 +14,12 @@ public class ProjectController {
     }
 
     @GetMapping("/")
-    private String projectsPage() {
+    public String projectsPage() {
         return "projects";
     }
 
     @GetMapping("/{id}")
-    private String register(@PathVariable String id) {
-        return "redirect:/projects";
+    public String projectByIdPage(@PathVariable String id) {
+        return "project";
     }
 }
