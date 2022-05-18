@@ -1,6 +1,7 @@
 package hu.triszt4n.minijira.configuration;
 
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -10,11 +11,15 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity httpSecurity) throws Exception {
-        /* httpSecurity
-                .csrf().disable()
-                .authorizeRequests().antMatchers("/", "/auth/**").permitAll()
+        httpSecurity
+                .authorizeRequests()
+                .antMatchers("/", "/auth/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
-                .httpBasic(); */
+                .formLogin().loginPage("/").permitAll()
+                .and()
+                .logout().logoutSuccessUrl("/").permitAll()
+                .and()
+                .csrf().disable();
     }
 }

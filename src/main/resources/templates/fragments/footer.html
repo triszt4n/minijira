@@ -4,7 +4,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" th:href="@{/bootstrap.min.css}"/>
 <body>
-<div th:fragment="footer" th:align="center">
+<div th:fragment="footer" th:align="center" class="text-center text-muted mt-5 mb-3">
     &copy; Trisztán Piller | Mini JIRA <span th:text="${#temporals.format(#temporals.createNow(), 'yyyy')}">2077</span>
 </div>
 </body>

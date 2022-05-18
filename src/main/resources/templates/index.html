@@ -8,20 +8,27 @@
     <link th:href="@{/css/login.css}" rel="stylesheet"/>
     <script th:src="@{/bootstrap.bundle.min.js}"></script>
     <script src="https://kit.fontawesome.com/735dba9ed7.js" crossorigin="anonymous"></script>
+    <link rel="icon" type="image/png" th:href="@{/img/favicon.png}"/>
 </head>
-<body class="text-center">
+<body>
 <main class="form-signin w-100 m-auto">
-    <form>
+    <th:block th:if="${message != null}">
+        <div th:replace="fragments/alert :: alert (type=${#strings.toLowerCase(message.type)}, message=${message.message})"></div>
+    </th:block>
+    <form class="text-center" th:action="@{/auth/login}" th:object="${loginUserInput}" method="post">
         <img class="mb-4" th:src="@{/img/minijira.svg}" alt="" width="128">
         <h1 class="h3 mb-3 fw-normal">Sign in to Mini JIRA</h1>
-
-        <div class="form-floating">
-            <input type="text" class="form-control" id="floatingInput" placeholder="dev-username" min="1" max="32">
+        <div class="form-floating my-1">
+            <input type="text" class="form-control" th:classappend="${#fields.hasErrors('username') ? 'is-invalid' : ''}"
+                   id="floatingInput" min="1" max="32" th:field="*{username}">
             <label for="floatingInput">Username</label>
+            <div class="invalid-feedback" th:if="${#fields.hasErrors('username')}" th:errors="*{username}"></div>
         </div>
-        <div class="form-floating">
-            <input type="password" class="form-control" id="floatingPassword" placeholder="Password" min="1" max="64">
+        <div class="form-floating my-1">
+            <input type="password" class="form-control" th:classappend="${#fields.hasErrors('passwordRaw') ? 'is-invalid' : ''}"
+                   id="floatingPassword" min="1" max="64" th:field="*{passwordRaw}">
             <label for="floatingPassword">Password</label>
+            <div class="invalid-feedback" th:if="${#fields.hasErrors('passwordRaw')}" th:errors="*{passwordRaw}"></div>
         </div>
         <button class="w-100 btn btn-lg btn-primary" type="submit">Sign in</button>
     </form>
@@ -29,11 +36,9 @@
         <div>
             Not a member yet?
         </div>
-        <a class="btn btn-secondary" href="/auth/register">Sign up</a>
+        <a class="btn btn-secondary" th:href="@{/auth/register}">Sign up</a>
     </div>
-    <p class="mt-5 mb-3 text-muted">
-        &copy; Trisztán Piller | Mini JIRA <span th:text="${#temporals.format(#temporals.createNow(), 'yyyy')}">2077</span>
-    </p>
+    <div th:replace="fragments/footer :: footer"></div>
 </main>
 </body>
 </html>

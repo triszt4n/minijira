@@ -1,13 +1,11 @@
 package hu.triszt4n.minijira.service;
 
-import hu.triszt4n.minijira.dto.CreateUserDto;
+import hu.triszt4n.minijira.input.CreateUserInput;
 import hu.triszt4n.minijira.entity.UserEntity;
+import hu.triszt4n.minijira.input.LoginUserInput;
 import hu.triszt4n.minijira.repository.UserRepository;
 import hu.triszt4n.minijira.util.RoleEnum;
 import org.springframework.stereotype.Service;
-
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Size;
 
 @Service
 public class UserService {
@@ -17,10 +15,21 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    public UserEntity createUser(CreateUserDto createUserDto) {
+    public UserEntity createUser(CreateUserInput createUserInput) throws IllegalArgumentException {
+        if (userRepository.existsByUsernameIgnoreCase(createUserInput.getUsername())) {
+            throw new IllegalArgumentException("Username already in use");
+        }
+
         return userRepository.save(new UserEntity()
-                .setUsername(createUserDto.getUsername())
-                .setPassword(createUserDto.getPasswordRaw())
+                .setUsername(createUserInput.getUsername())
+                .setPassword(createUserInput.getPasswordRaw())
                 .setRole(RoleEnum.DEVELOPER));
+    }
+
+    public UserEntity getUser(LoginUserInput loginUserInput) {
+        return userRepository.findByUsernameIgnoreCaseAndPassword(
+                loginUserInput.getUsername(),
+                loginUserInput.getPasswordRaw()
+                ).orElse(null);
     }
 }
