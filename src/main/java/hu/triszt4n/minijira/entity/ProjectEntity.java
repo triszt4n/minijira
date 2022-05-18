@@ -20,7 +20,7 @@ public class ProjectEntity {
     private String description;
 
     @Column
-    private boolean isClosed;
+    private boolean isClosed = false;
 
     @ManyToOne
     private UserEntity manager;

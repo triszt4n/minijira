@@ -22,6 +22,10 @@ public class MyUserPrincipal implements UserDetails {
         );
     }
 
+    public UserEntity getUserEntity() {
+        return userEntity;
+    }
+
     @Override
     public String getPassword() {
         return userEntity.getPassword();
