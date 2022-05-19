@@ -12,9 +12,4 @@ public enum RoleEnum {
     public String getRole() {
         return role;
     }
-
-    @Override
-    public String toString() {
-        return role;
-    }
 }
