@@ -21,7 +21,9 @@ class SecurityConfig extends WebSecurityConfigurerAdapter {
         httpSecurity
                 .authorizeRequests()
                 .antMatchers("/", "/auth/**", "/js/**", "/css/**", "/img/**").permitAll()
-                .antMatchers(HttpMethod.POST, "/**/new/", "/**/edit/").hasRole(RoleEnum.MANAGER.toString())
+                .antMatchers("/projects/new/**", "/projects/**/edit",
+                        "/tasks/new/**", "/tasks/**/edit", "/tasks/**/assign", "/tasks/**/unassign/**").hasRole(RoleEnum.MANAGER.toString())
+                .antMatchers(HttpMethod.DELETE, "/projects/**", "/tasks/**").hasRole(RoleEnum.MANAGER.toString())
                 .anyRequest().authenticated()
                 .and()
                 .formLogin()

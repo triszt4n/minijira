@@ -43,6 +43,7 @@
                 <div class="col-12 my-1">
                     <div class="card w-100 position-relative">
                         <button class="btn btn-outline-danger btn-sm position-absolute top-0 end-0"
+                                sec:authorize="hasRole('ROLE_MANAGER')"
                                 th:onclick="'deleteTask(' + ${task.getId()} + ')'">
                             <i class="fa-solid fa-trash"></i>
                         </button>
