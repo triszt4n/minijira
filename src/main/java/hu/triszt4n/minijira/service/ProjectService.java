@@ -48,4 +48,11 @@ public class ProjectService {
 
         this.projectRepository.save(projectEntity);
     }
+
+    public void delete(Long id) {
+        final var projectEntity = this.projectRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Project does not exist"));
+
+        projectRepository.delete(projectEntity);
+    }
 }

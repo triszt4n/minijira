@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+</head>
+<body>
+<div th:fragment="assigneeModal(task, users)" class="modal fade" id="assigneeModal" tabindex="-1"
+     aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Add assignee</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form method="post" th:action="@{/tasks/{id}/assign(id=${task.getId()})}"
+                  th:unless="${users.isEmpty()}">
+                <div class="modal-body">
+                    <h5 th:if="${users.isEmpty()}">Cannot assign, no more assignable user!</h5>
+                    <div class="mb-3">
+                        <select class="form-select" aria-label="Default select example" required name="assigneeId">
+                            <option th:each="user : ${users}" th:value="${user.getId()}"
+                                    th:text="${user.getUsername()}"></option>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Assign</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+</body>
+</html>

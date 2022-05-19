@@ -2,6 +2,7 @@ package hu.triszt4n.minijira.controller;
 
 import hu.triszt4n.minijira.dto.MessageDto;
 import hu.triszt4n.minijira.input.LoginUserInput;
+import hu.triszt4n.minijira.util.MyUserPrincipal;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -30,5 +31,12 @@ public class MainController {
 
         model.addAttribute("loginUserInput", new LoginUserInput());
         return "index";
+    }
+
+    @GetMapping("/profile")
+    public String loginPage(Authentication authentication) {
+        final var principal = (MyUserPrincipal) authentication.getPrincipal();
+        final var currentUser = principal.getUserEntity();
+        return "redirect:/users/".concat(String.valueOf(currentUser.getId()));
     }
 }

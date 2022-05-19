@@ -1,6 +1,7 @@
 package hu.triszt4n.minijira.controller;
 
 import hu.triszt4n.minijira.dto.MessageDto;
+import hu.triszt4n.minijira.input.CreateCommentInput;
 import hu.triszt4n.minijira.input.CreateTaskInput;
 import hu.triszt4n.minijira.input.UpdateTaskInput;
 import hu.triszt4n.minijira.service.CommentService;
@@ -32,7 +33,8 @@ public class TaskController {
     }
 
     @GetMapping("/{id}")
-    public String taskPage(Model model, @PathVariable Long id) {
+    public String taskPage(Model model,
+                           @PathVariable Long id) {
         final var task = taskService.getById(id);
         if (task == null) {
             model.addAttribute("message", new MessageDto()
@@ -48,11 +50,13 @@ public class TaskController {
         model.addAttribute("task", task);
         model.addAttribute("comments", comments);
         model.addAttribute("users", assignableUsers);
+        model.addAttribute("createCommentInput", new CreateCommentInput());
         return "task";
     }
 
     @GetMapping("/new/{projectId}")
-    public String newTaskPage(Model model, @PathVariable Long projectId) {
+    public String newTaskPage(Model model,
+                              @PathVariable Long projectId) {
         model.addAttribute("createTaskInput", new CreateTaskInput());
         model.addAttribute("statuses", StatusEnum.values());
         return "formPages/newTask";
@@ -74,10 +78,11 @@ public class TaskController {
     }
 
     @GetMapping("/{id}/edit")
-    public String editTaskPage(Model model, @PathVariable Long id) {
+    public String editTaskPage(Model model,
+                               @PathVariable Long id) {
         final var task = taskService.getById(id);
 
-        model.addAttribute("createTaskInput", new UpdateTaskInput(task));
+        model.addAttribute("updateTaskInput", new UpdateTaskInput(task));
         model.addAttribute("statuses", StatusEnum.values());
         return "formPages/editTask";
     }
@@ -102,9 +107,13 @@ public class TaskController {
     }
 
     @PostMapping("/{id}/unassign/{assigneeId}")
-    public String removeAssignee(@PathVariable Long id,
-                                 @PathVariable Long assigneeId) {
+    public void removeAssignee(@PathVariable Long id,
+                               @PathVariable Long assigneeId) {
         taskService.removeAssignee(id, assigneeId);
-        return "redirect:/tasks/".concat(String.valueOf(id));
+    }
+
+    @DeleteMapping("/{id}")
+    public void deleteTask(@PathVariable Long id) {
+        taskService.delete(id);
     }
 }

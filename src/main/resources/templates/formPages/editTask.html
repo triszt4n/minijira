@@ -12,7 +12,7 @@
 <body>
 <div th:replace="fragments/navbar :: navbar"></div>
 <main class="container">
-    <form th:object="${createTaskInput}" method="post">
+    <form th:object="${updateTaskInput}" method="post">
         <h1 class="h3 my-3 fw-normal text-center">Edit Task</h1>
         <div class="mb-3">
             <label for="title" class="form-label">Title</label>

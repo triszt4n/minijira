@@ -42,4 +42,10 @@ public class UserService {
     public List<UserEntity> getAll() {
         return userRepository.findAll();
     }
+
+    public UserEntity getById(Long id) {
+        return userRepository
+                .findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+    }
 }

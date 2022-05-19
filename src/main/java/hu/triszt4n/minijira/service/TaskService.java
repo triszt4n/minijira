@@ -9,7 +9,6 @@ import hu.triszt4n.minijira.repository.ProjectRepository;
 import hu.triszt4n.minijira.repository.TaskRepository;
 import hu.triszt4n.minijira.repository.UserRepository;
 import hu.triszt4n.minijira.util.StatusEnum;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -28,6 +27,14 @@ public class TaskService {
 
     public List<TaskEntity> getAllByProject(ProjectEntity projectEntity) {
         return this.taskRepository.findByProject(projectEntity);
+    }
+
+    public List<TaskEntity> getTodosByProject(ProjectEntity projectEntity) {
+        return this.taskRepository.findByProjectAndStatus(projectEntity, StatusEnum.TODO);
+    }
+
+    public List<TaskEntity> getAllAssignedOfUser(UserEntity userEntity) {
+        return this.taskRepository.findByAssignedUsersIn(List.of(userEntity));
     }
 
     public TaskEntity getById(Long id) {
@@ -80,5 +87,12 @@ public class TaskService {
 
         taskEntity.getAssignedUsers().remove(userEntity);
         this.taskRepository.save(taskEntity);
+    }
+
+    public void delete(Long id) {
+        final var taskEntity = taskRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Task does not exist"));
+
+        taskRepository.delete(taskEntity);
     }
 }

@@ -24,7 +24,7 @@
         </button>
         <button class="btn btn-danger" th:onclick="'deleteTask(' + ${task.getId()} + ')'">Delete</button>
     </div>
-    <div class="row mb-4">
+    <div class="row mb-4 gx-5">
         <div class="col">
             <h2>
                 <i class="fa-solid fa-list-check"></i>
@@ -60,8 +60,9 @@
                             <a th:text="${user.getUsername()}" th:href="@{/users/{id}/(id=${user.getId()})}"></a>
                             <span th:text="${user.getRole().getRole() == 'ROLE_MANAGER' ? '(manager)' : ''}"></span>
                         </div>
-                        <button type="button" class="btn btn-outline-danger btn-sm" sec:authorize="hasRole('ROLE_MANAGER')"
-                                th:onclick="'unassign(' + ${task.getId()} + ', ' + ${user.getId()} + ')'">
+                        <button type="button" class="btn btn-outline-danger btn-sm"
+                                sec:authorize="hasRole('ROLE_MANAGER')"
+                                th:onclick="'unassign(' + ${task.getId()} + ',' + ${user.getId()} + ')'">
                             <i class="fa-solid fa-trash"></i>
                         </button>
                     </div>
@@ -76,36 +77,34 @@
             </div>
         </div>
         <div class="col-12 my-1" th:each="comment: ${comments}">
-            TODO: show comment details
+            <div class="card w-100">
+                <div class="card-body">
+                    <div class="d-flex">
+                        <div><i class="fa-solid fa-comment"></i></div>
+                        <div class="h5 flex-grow-1 ms-2">
+                            <a th:text="${comment.getPublisher().getUsername()}" th:href="@{/users/{id}/(id=${comment.getPublisher().getId()})}"></a>
+                            <span th:text="${comment.getPublisher().getRole().getRole() == 'ROLE_MANAGER' ? '(manager)' : ''}"></span>
+                        </div>
+                        <a class="btn btn-outline-success btn-sm" th:href="@{/comments/{id}/edit(id=${comment.getId()})}">
+                            <i class="fa-solid fa-edit"></i>
+                        </a>
+                        <button type="button" class="btn btn-outline-danger btn-sm ms-1" sec:authorize="hasRole('ROLE_MANAGER')"
+                                th:onclick="'deleteComment(' + ${task.getId()} + ',' + ${comment.getId()} + ')'">
+                            <i class="fa-solid fa-trash"></i>
+                        </button>
+                    </div>
+                    <div>
+                        <span th:text="${comment.getBody()}"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 mt-2">
+            <div th:replace="fragments/commentForm :: commentForm (task=${task})"></div>
         </div>
     </div>
     <!-- Modal -->
-    <div class="modal fade" id="assigneeModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Add assignee</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <form method="post" th:action="@{/tasks/{id}/assign(id=${task.getId()})}"
-                      th:unless="${users.isEmpty()}">
-                    <div class="modal-body">
-                        <h5 th:if="${users.isEmpty()}">Cannot assign, no more assignable user!</h5>
-                        <div class="mb-3">
-                            <select class="form-select" aria-label="Default select example" required name="assigneeId">
-                                <option th:each="user : ${users}" th:value="${user.getId()}"
-                                        th:text="${user.getUsername()}"></option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary">Assign</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
+    <div th:replace="fragments/assigneeModal :: assigneeModal (task=${task}, users=${users})"></div>
 </main>
 <div th:replace="fragments/footer :: footer"></div>
 </body>
