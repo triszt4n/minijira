@@ -33,4 +33,7 @@ public class TaskEntity {
 
     @ManyToMany
     private List<UserEntity> assignedUsers;
+
+    @OneToMany(fetch = FetchType.LAZY, orphanRemoval=true, cascade=CascadeType.ALL, mappedBy = "task")
+    private List<CommentEntity> comments;
 }

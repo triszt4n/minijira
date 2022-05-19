@@ -9,7 +9,6 @@ import hu.triszt4n.minijira.service.TaskService;
 import hu.triszt4n.minijira.service.UserService;
 import hu.triszt4n.minijira.util.MyUserPrincipal;
 import hu.triszt4n.minijira.util.StatusEnum;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

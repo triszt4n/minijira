@@ -41,12 +41,12 @@ public class CommentService {
         );
     }
 
-    public CommentEntity update(Long id, UpdateCommentInput updateCommentInput) throws IllegalArgumentException {
+    public void update(Long id, UpdateCommentInput updateCommentInput) throws IllegalArgumentException {
         final var commentEntity = commentRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Comment does not exist"));
 
         commentEntity.setBody(updateCommentInput.getBody());
-        return commentRepository.save(commentEntity);
+        commentRepository.save(commentEntity);
     }
 
     public void delete(Long id) {

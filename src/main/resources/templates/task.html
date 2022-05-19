@@ -22,7 +22,7 @@
                 data-bs-target="#assigneeModal">
             Add assignee
         </button>
-        <button class="btn btn-danger" th:onclick="'deleteTask(' + ${task.getId()} + ')'">Delete</button>
+        <button class="btn btn-danger" th:onclick="'deleteTask(' + ${task.getId()} + ',' + ${task.getProject().getId()} + ')'">Delete</button>
     </div>
     <div class="row mb-4 gx-5">
         <div class="col">
@@ -89,7 +89,7 @@
                             <i class="fa-solid fa-edit"></i>
                         </a>
                         <button type="button" class="btn btn-outline-danger btn-sm ms-1" sec:authorize="hasRole('ROLE_MANAGER')"
-                                th:onclick="'deleteComment(' + ${task.getId()} + ',' + ${comment.getId()} + ')'">
+                                th:onclick="'deleteComment(' + ${comment.getId()} + ')'">
                             <i class="fa-solid fa-trash"></i>
                         </button>
                     </div>

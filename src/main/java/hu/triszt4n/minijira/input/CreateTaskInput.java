@@ -1,7 +1,5 @@
 package hu.triszt4n.minijira.input;
 
-import hu.triszt4n.minijira.entity.ProjectEntity;
-import hu.triszt4n.minijira.util.StatusEnum;
 import lombok.Data;
 import lombok.experimental.Accessors;
 

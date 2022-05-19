@@ -1,6 +1,7 @@
 package hu.triszt4n.minijira.configuration;
 
 import hu.triszt4n.minijira.service.MyUserDetailsService;
+import hu.triszt4n.minijira.util.RoleEnum;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -20,6 +21,7 @@ class SecurityConfig extends WebSecurityConfigurerAdapter {
         httpSecurity
                 .authorizeRequests()
                 .antMatchers("/", "/auth/**", "/js/**", "/css/**", "/img/**").permitAll()
+                .antMatchers(HttpMethod.POST, "/**/new/", "/**/edit/").hasRole(RoleEnum.MANAGER.getRole())
                 .anyRequest().authenticated()
                 .and()
                 .formLogin()

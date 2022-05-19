@@ -4,6 +4,7 @@ import lombok.Data;
 import lombok.experimental.Accessors;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Data
@@ -24,4 +25,7 @@ public class ProjectEntity {
 
     @ManyToOne
     private UserEntity manager;
+
+    @OneToMany(fetch = FetchType.LAZY, orphanRemoval=true, cascade=CascadeType.ALL, mappedBy = "project")
+    private List<TaskEntity> tasks;
 }

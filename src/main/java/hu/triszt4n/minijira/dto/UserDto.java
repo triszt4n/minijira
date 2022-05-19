@@ -10,12 +10,12 @@ import lombok.experimental.Accessors;
 public class UserDto {
     private Long id;
     private String username;
-    private RoleEnum role;
+    private String roleName;
 
     public static UserDto convert(UserEntity entity) {
         return new UserDto()
                 .setId(entity.getId())
                 .setUsername(entity.getUsername())
-                .setRole(entity.getRole());
+                .setRoleName(entity.getRole() == RoleEnum.MANAGER ? "Manager" : "Developer");
     }
 }
