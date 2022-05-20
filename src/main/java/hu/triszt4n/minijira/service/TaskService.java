@@ -11,9 +11,11 @@ import hu.triszt4n.minijira.repository.UserRepository;
 import hu.triszt4n.minijira.util.StatusEnum;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.List;
 
 @Service
+@Transactional
 public class TaskService {
     private final TaskRepository taskRepository;
     private final ProjectRepository projectRepository;

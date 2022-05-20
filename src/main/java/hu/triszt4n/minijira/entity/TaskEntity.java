@@ -18,6 +18,7 @@ public class TaskEntity {
     @Column
     private String title;
 
+    @Lob
     @Column
     private String description;
 

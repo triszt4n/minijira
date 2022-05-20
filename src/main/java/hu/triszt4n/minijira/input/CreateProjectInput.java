@@ -3,6 +3,7 @@ package hu.triszt4n.minijira.input;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
+import javax.validation.constraints.Max;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
@@ -13,5 +14,6 @@ public class CreateProjectInput {
     @Size(min = 3, max = 64)
     private String title;
 
+    @Size(max = 1000)
     private String description = "";
 }

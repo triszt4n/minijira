@@ -17,6 +17,7 @@ public class ProjectEntity {
     @Column
     private String title;
 
+    @Lob
     @Column
     private String description;
 

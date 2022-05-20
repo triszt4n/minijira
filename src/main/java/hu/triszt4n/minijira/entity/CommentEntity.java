@@ -13,6 +13,7 @@ public class CommentEntity {
     @Id
     private Long id;
 
+    @Lob
     @Column
     private String body;
 

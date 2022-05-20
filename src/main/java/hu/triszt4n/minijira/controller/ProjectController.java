@@ -14,6 +14,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.thymeleaf.util.StringUtils;
 
 import javax.validation.Valid;
 import java.util.HashMap;
@@ -101,6 +102,14 @@ public class ProjectController {
         final var tasks = taskService.getAllByProject(project);
         for (var status : StatusEnum.values()) {
             final var filteredTasks = tasks.stream().filter(taskEntity -> taskEntity.getStatus() == status).collect(Collectors.toList());
+            filteredTasks.forEach(taskEntity ->
+                    taskEntity.setDescription(
+                            StringUtils.abbreviate(
+                                    taskEntity.getDescription(),
+                                    20
+                            )
+                    )
+            );
             tasksMap.put(status, filteredTasks);
         }
 

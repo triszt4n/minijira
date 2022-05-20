@@ -9,9 +9,11 @@ import hu.triszt4n.minijira.repository.CommentRepository;
 import hu.triszt4n.minijira.repository.TaskRepository;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.List;
 
 @Service
+@Transactional
 public class CommentService {
     private final CommentRepository commentRepository;
     private final TaskRepository taskRepository;

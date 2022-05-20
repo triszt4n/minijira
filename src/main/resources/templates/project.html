@@ -55,7 +55,7 @@
                             <h6 class="card-subtitle mb-1 text-muted">
                                 needs <span th:text="${task.getHoursNeeded()}"></span> hours
                             </h6>
-                            <p class="card-text" th:text="${project.getDescription()}">desc</p>
+                            <p class="card-text" th:text="${task.getDescription()}">desc</p>
                             <a th:unless="${project.isClosed()}" sec:authorize="hasRole('ROLE_MANAGER')" type="button"
                                th:href="@{/tasks/{id}/edit(id=${task.getId()})}"
                                class="card-link btn btn-sm btn-link align-self-end">
